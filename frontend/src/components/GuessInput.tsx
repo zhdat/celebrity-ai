@@ -47,13 +47,11 @@ export const GuessInput = ({onGuess}: { onGuess: (guess: string) => void }) => {
             } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 setSelectedIndex((prevIndex) => (prevIndex - 1 + suggestions.length) % suggestions.length);
-            } else if (e.key === "Tab") {
+            } else if (e.key === "Tab" || e.key === "Enter") {
                 e.preventDefault();
                 if (selectedIndex >= 0) {
                     handleSelect(suggestions[selectedIndex]);
                 }
-            } else if (e.key === "Enter") {
-                handleSubmit();
             }
         }
     };
@@ -70,18 +68,18 @@ export const GuessInput = ({onGuess}: { onGuess: (guess: string) => void }) => {
                 <input
                     ref={inputRef}
                     type="text"
-                    className="w-full border p-2 rounded"
+                    className="w-full border border-indigo-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                     value={input}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    placeholder="Tape un nom..."
+                    placeholder="Tape un nom de célébrité..."
                 />
                 {suggestions.length > 0 && (
-                    <ul className="absolute top-full left-0 w-full bg-white border rounded shadow-md z-10">
+                    <ul className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-md z-10 mt-1">
                         {suggestions.map((s, i) => (
                             <li
                                 key={i}
-                                className={`p-2 hover:bg-gray-100 cursor-pointer ${i === selectedIndex ? "bg-gray-200" : ""}`}
+                                className={`p-2 hover:bg-indigo-100 cursor-pointer ${i === selectedIndex ? "bg-indigo-200" : ""}`}
                                 onClick={() => handleSelect(s)}
                                 onMouseEnter={() => setSelectedIndex(i)}
                             >
@@ -93,7 +91,7 @@ export const GuessInput = ({onGuess}: { onGuess: (guess: string) => void }) => {
             </div>
             <button
                 onClick={handleSubmit}
-                className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="mt-4 w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg shadow hover:bg-indigo-700 hover:scale-[1.02] transition-all"
             >
                 Valider
             </button>

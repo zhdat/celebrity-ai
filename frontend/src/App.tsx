@@ -5,6 +5,7 @@ import {auth} from "./utils/firebase";
 import {AuthPage} from "./pages/AuthPage";
 import {GamePage} from "./pages/GamePage.tsx";
 import {BrowserRouter as Router, Navigate, Route, Routes} from "react-router-dom";
+import {DifficultyPage} from "@/pages/DifficultyPage.tsx";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -23,9 +24,10 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={
-                    user ? <Navigate to="/game" replace/> : <Navigate to="/auth" replace/>
+                    user ? <Navigate to="/difficulty" replace/> : <Navigate to="/auth" replace/>
                 }/>
                 <Route path="/auth" element={<AuthPage/>}/>
+                <Route path="/difficulty" element={user ? <DifficultyPage/> : <Navigate to="/auth" replace/>}/>
                 <Route path="/game" element={user ? <GamePage/> : <Navigate to="/auth" replace/>}/>
             </Routes>
         </Router>
