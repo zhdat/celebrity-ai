@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "./App.css";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "./utils/firebase";
-import { AuthPage } from "./pages/AuthPage";
+import {onAuthStateChanged, User} from "firebase/auth";
+import {auth} from "./utils/firebase";
+import {AuthPage} from "./pages/AuthPage";
+import {GamePage} from "./pages/GamePage.tsx";
+import {BrowserRouter as Router, Navigate, Route, Routes} from "react-router-dom";
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    return onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-  }, []);
+    useEffect(() => {
+        return onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            setLoading(false);
+        });
+    }, []);
 
-  if (loading) return <div>Chargement...</div>;
+    if (loading) return <div>Chargement...</div>;
 
-  return user ? (
-    <div className="p-6">
-      <h1 className="text-xl mb-4">Bienvenue, {user.email}</h1>
-      <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => auth.signOut()}>
-        Se déconnecter
-      </button>
-    </div>
-  ) : (
-    <AuthPage />
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={
+                    user ? <Navigate to="/game" replace/> : <Navigate to="/auth" replace/>
+                }/>
+                <Route path="/auth" element={<AuthPage/>}/>
+                <Route path="/game" element={user ? <GamePage/> : <Navigate to="/auth" replace/>}/>
+            </Routes>
+        </Router>
+    )
 }
 
 export default App;
