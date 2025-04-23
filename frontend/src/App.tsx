@@ -6,6 +6,8 @@ import {AuthPage} from "./pages/AuthPage";
 import {GamePage} from "./pages/GamePage.tsx";
 import {BrowserRouter as Router, Navigate, Route, Routes} from "react-router-dom";
 import {DifficultyPage} from "@/pages/DifficultyPage.tsx";
+import {LeaderboardPage} from "@/pages/LeaderboardPage.tsx";
+import {MyScoresPage} from "@/pages/MyScorePage.tsx";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -29,6 +31,10 @@ function App() {
                 <Route path="/auth" element={<AuthPage/>}/>
                 <Route path="/difficulty" element={user ? <DifficultyPage/> : <Navigate to="/auth" replace/>}/>
                 <Route path="/game" element={user ? <GamePage/> : <Navigate to="/auth" replace/>}/>
+                <Route path="/leaderboard"
+                       element={user ? <LeaderboardPage/> : <Navigate to="/auth" replace/>}/>
+                <Route path={"/my-score"}
+                       element={user ? <MyScoresPage/> : <Navigate to="/auth" replace/>}/>
             </Routes>
         </Router>
     )
