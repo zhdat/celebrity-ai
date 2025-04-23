@@ -28,3 +28,12 @@ public
 
 pnpm-lock.yaml
 pnpm-workspace.yaml
+
+.firebase/
+.firebaserc
+apphosting.yaml
+dataconnect/
+firebase.json
+firestore.indexes.json
+firestore.rules
+functions/
