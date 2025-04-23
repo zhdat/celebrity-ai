@@ -1,5 +1,4 @@
 import {Link} from "react-router-dom";
-import {auth} from "@/utils/firebase.ts";
 
 export const Header = () => {
     return (
@@ -11,12 +10,11 @@ export const Header = () => {
             >
                 🎭 Celebrity Fusion
             </Link>
-            <button
-                onClick={() => auth.signOut()}
-                className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-3 py-1 rounded-full text-sm shadow hover:scale-105 transition-transform"
-            >
-                Déconnexion
-            </button>
+            <nav className="flex gap-4 text-white text-sm sm:text-base font-semibold">
+                <Link to="/difficulty" className="hover:underline">Jouer</Link>
+                <Link to="/leaderboard" className="hover:underline">Classement</Link>
+                <Link to="/my-score" className="hover:underline">Mes scores</Link>
+            </nav>
         </header>
     )
 }

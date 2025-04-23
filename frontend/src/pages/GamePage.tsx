@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
 import data from "../data/images.json"
 import {GuessInput} from "@/components/GuessInput.tsx";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Layout} from "@/components/Layout.tsx";
+import {addDoc, collection, getFirestore, serverTimestamp} from "firebase/firestore";
+import {auth} from "@/utils/firebase"
 
 export const GamePage = () => {
     const [index, setIndex] = useState(0);
@@ -10,12 +12,27 @@ export const GamePage = () => {
     const [timer, setTimer] = useState(30);
     const [done, setDone] = useState(false);
 
+    const navigate = useNavigate();
+
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const difficulty = params.get("difficulty") || "easy";
 
     const filtered = data.filter((img) => img.difficulty === difficulty);
     const current = filtered[index];
+
+    const db = getFirestore();
+
+    const saveScore = async () => {
+        if (!auth.currentUser) return;
+        await addDoc(collection(db, "scores"), {
+            userId: auth.currentUser.uid,
+            userEmail: auth.currentUser.email,
+            score: score,
+            difficulty: difficulty,
+            createdAt: serverTimestamp(),
+        });
+    }
 
     useEffect(() => {
         if (timer == 0) {
@@ -42,6 +59,12 @@ export const GamePage = () => {
         next();
     };
 
+    useEffect(() => {
+        if (done) {
+            saveScore();
+        }
+    }, [done]);
+
 
     if (done) {
         return (
@@ -49,6 +72,20 @@ export const GamePage = () => {
                 <div
                     className="min-h-screen flex flex-col items-center justify-center text-center text-xl text-green-600">
                     🎉 Bravo ! Score final : {score} / {filtered.length}
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => navigate("/leaderboard")}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                        >
+                            Voir le classement
+                        </button>
+                        <button
+                            onClick={() => navigate("/difficulty")}
+                            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+                        >
+                            Rejouer
+                        </button>
+                    </div>
                 </div>
             </Layout>
         );
